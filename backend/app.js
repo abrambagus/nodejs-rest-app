@@ -66,12 +66,7 @@ mongoose
     "mongodb+srv://abrambagus_db_user:Le8JaOB7qFK7b175@cluster0.d1jikx7.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0&tlsAllowInvalidCertificates=true&tlsAllowInvalidHostnames=true"
   )
   .then(() => {
-    const { Server } = require("socket.io");
-    const io = new Server(server, {
-      cors: {
-        origin: "*",
-      },
-    });
+    const io = require("./socket").init(server);
     io.on("connection", (socket) => {
       console.log("Client connected.");
     });
