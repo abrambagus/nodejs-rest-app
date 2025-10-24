@@ -9,6 +9,8 @@ const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
 
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -63,7 +65,16 @@ mongoose
   .connect(
     "mongodb+srv://abrambagus_db_user:Le8JaOB7qFK7b175@cluster0.d1jikx7.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0&tlsAllowInvalidCertificates=true&tlsAllowInvalidHostnames=true"
   )
-  .then((result) => {
-    app.listen(8080);
+  .then(() => {
+    const { Server } = require("socket.io");
+    const io = new Server(server, {
+      cors: {
+        origin: "*",
+      },
+    });
+    io.on("connection", (socket) => {
+      console.log("Client connected.");
+    });
+    server.listen(8080);
   })
   .catch((err) => console.log(err));
